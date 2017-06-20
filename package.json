@@ -1,0 +1,14 @@
+{
+  "name": "showtime-api",
+  "version": "1.0.0",
+  "description": "\"search api\",",
+  "main": "index.js",
+  "scripts": {
+    "test": "\"mocha\""
+  },
+  "author": "Dhafir Fuller",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.15.3"
+  }
+}
