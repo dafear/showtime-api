@@ -1,12 +1,16 @@
-const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
+const db = require('./db');
+ mongoose.createConnection("mongodb://dafear:sidney12@ds139480.mlab.com:39480/showtime-api");
+
+const bcrypt = require('bcrypt');
+
 
 mongoose.Promise = global.Promise;
 
 
 
 const UserSchema = mongoose.Schema({
-  username: {
+   email: {
     type: String,
     required: true,
     unique: true
@@ -14,16 +18,15 @@ const UserSchema = mongoose.Schema({
   password: {
     type: String,
     required: true
-  },
-  firstName: {type: String, default: ""},
-  lastName: {type: String, default: ""}
-});
+  }
+//   firstName: {type: String, default: ""},
+//   lastName: {type: String, default: ""}
+ });
 
 UserSchema.methods.apiRepr = function() {
   return {
-    username: this.username || '',
-    firstName: this.firstName || '',
-    lastName: this.lastName || ''
+    email: this.email || '',
+    
   };
 }
 

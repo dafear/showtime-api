@@ -3,8 +3,7 @@ const express = require('express');
 const jsonParser = require('body-parser').json();
 const passport = require('passport');
 
-
-const {User} = require('./passModels');
+const {User} = require('./usersModels.js');
 
 const router = express.Router();
 
@@ -12,10 +11,10 @@ router.use(jsonParser);
 
 
 // NB: at time of writing, passport uses callbacks, not promises
-const basicStrategy = new BasicStrategy((username, password, callback) => {
+const basicStrategy = new BasicStrategy((email, password, callback) => {
   let user;
   User
-    .findOne({username: username})
+    .findOne({email: email})
     .exec()
     .then(_user => {
       user = _user;
@@ -42,21 +41,21 @@ router.post('/', (req, res) => {
   if (!req.body) {
     return res.status(400).json({message: 'No request body'});
   }
-
-  if (!('username' in req.body)) {
-    return res.status(422).json({message: 'Missing field: username'});
+  console.log(req.body);
+  if (!('email' in req.body)) {
+    return res.status(422).json({message: 'Missing field: email'});
   }
 
-  let {username, password, firstName, lastName} = req.body;
+  let {email, password} = req.body;
 
-  if (typeof username !== 'string') {
-    return res.status(422).json({message: 'Incorrect field type: username'});
+  if (typeof email !== 'string') {
+    return res.status(422).json({message: 'Incorrect field type: email'});
   }
 
-  username = username.trim();
+  email = email.trim();
 
-  if (username === '') {
-    return res.status(422).json({message: 'Incorrect field length: username'});
+  if (email === '') {
+    return res.status(422).json({message: 'Incorrect field length: email'});
   }
 
   if (!(password)) {
@@ -75,12 +74,12 @@ router.post('/', (req, res) => {
 
   // check for existing user
   return User
-    .find({username})
+    .find({email})
     .count()
     .exec()
     .then(count => {
       if (count > 0) {
-        return res.status(422).json({message: 'username already taken'});
+        return res.status(422).json({message: 'email already taken'});
       }
       // if no existing user, hash password
       return User.hashPassword(password)
@@ -88,10 +87,9 @@ router.post('/', (req, res) => {
     .then(hash => {
       return User
         .create({
-          username: username,
-          password: hash,
-          firstName: firstName,
-          lastName: lastName
+          email: email,
+          password: hash
+          
         })
     })
     .then(user => {
@@ -106,21 +104,21 @@ router.post('/', (req, res) => {
 // we're just doing this so we have a quick way to see
 // if we're creating users. keep in mind, you can also
 // verify this in the Mongo shell.
-// router.get('/', (req, res) => {
-//   return User
-//     .find()
-//     .exec()
-//     .then(users => res.json(users.map(user => user.apiRepr())))
-//     .catch(err => console.log(err) && res.status(500).json({message: 'Internal server error'}));
-// });
+  // router.get('/', (req, res) => {
+  //   return User
+  //    .find()
+  //   .exec()
+  //     .then(users => res.json(users.map(user => user.apiRepr())))
+  //     .catch(err => console.log(err) && res.status(500).json({message: 'Internal server error'}));
+  // });
 
 
 
 
-router.get('/searches',
-  passport.authenticate('basic', {session: false}),
-  (req, res) => res.json({user: req.user.apiRepr()})
-);
+ router.get('/more',
+   passport.authenticate('basic', {session: false}),
+   (req, res) => res.json({user: req.user.apiRepr()})
+ );
 
 
-module.exports = {router};
+module.exports = router;
