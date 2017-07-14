@@ -7,23 +7,23 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const mongoose = require('mongoose');
 const http = require('http');
-const passport = require('passport');
 const flash = require('connect-flash');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
+const jwt = require('jsonwebtoken');
+const config = require('./config');
 
 
 
-//* require('./server/models').connect(config.dbUri);
 
 
 app.use(bodyParser.json());
 
 mongoose.Promise = global.Promise;
 
- const passRouter = require('./users/passRouter.js');
 
-  
+
+const passRouter = require('./users/passRouter.js'); 
 const stateRouter = require('./users/stateRouter.js');
 const searchRouter = require('./users/searchRouter.js');
 const {PORT, DATABASE_URL} = require('./config');
@@ -40,21 +40,21 @@ const {PORT, DATABASE_URL} = require('./config');
 
 
 
-
- 
- app.use('/', stateRouter);
- app.use('/', searchRouter);
-  app.use('/login', passRouter);
  app.use(morgan('common'));
 
-
-
+ app.use('/', stateRouter);
+ app.use('/', searchRouter);
+ app.use('/login', passRouter);
+ app.use('/register', passRouter);
+ app.use('/sessions', passRouter);
+ 
 
 
 
    app.use('*', function(req, res) {
     return res.status(404).json({message: 'Not Found'});
    });
+
 
 
 
@@ -65,7 +65,7 @@ let server;
 
     return new Promise((resolve, reject) => {
       
-    mongoose.connect('mongodb://dafear:sidney12@ds139480.mlab.com:39480/showtime-api', err => {
+    mongoose.connect(databaseUrl, err => {
      
 
       if (err) {

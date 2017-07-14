@@ -1,43 +1,57 @@
 const mongoose = require('mongoose');
 const db = require('./db');
- mongoose.createConnection("mongodb://dafear:sidney12@ds139480.mlab.com:39480/showtime-api");
+ mongoose.createConnection("mongodb://dafear:sidney123@ds151202.mlab.com:51202/showtime2");
 
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt-nodejs');
 
 
 mongoose.Promise = global.Promise;
 
 
 
-const UserSchema = mongoose.Schema({
-   email: {
+const userSchema = new mongoose.Schema({
+  email: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
+    index: true
   },
   password: {
     type: String,
+    select: false,
     required: true
-  }
-//   firstName: {type: String, default: ""},
-//   lastName: {type: String, default: ""}
- });
+  },
+  
+});
 
-UserSchema.methods.apiRepr = function() {
-  return {
-    email: this.email || '',
-    
-  };
+/// hashing before saves
+// pre-save
+userSchema.pre('save', function(next) {
+  var user = this;
+
+  if (!user.isModified('password'))
+    return next(); // means that if the password is not changed, just go to the next part and save the user
+
+  bcrypt.hash(user.password, null, null, function(err, hash) {
+    if (err)
+      return next(err);
+    user.password = hash;
+    next();
+  });
+});
+
+//compare password
+userSchema.methods.comparePassword = function(password) {
+  var user = this;
+  return bcrypt.compareSync(password, user.password);
+
 }
 
-UserSchema.methods.validatePassword = function(password) {
-  return bcrypt.compare(password, this.password);
-}
-
-UserSchema.statics.hashPassword = function(password) {
-  return bcrypt.hash(password, 10);
-}
-
-const User = mongoose.model('User', UserSchema);
+const User = mongoose.model('User', userSchema);
 
 module.exports = {User};
+
+
+
+
+

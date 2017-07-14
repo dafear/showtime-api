@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const db = require('./db');
- mongoose.createConnection("mongodb://dafear:sidney12@ds139480.mlab.com:39480/showtime-api");
+ mongoose.createConnection("mongodb://dafear:sidney123@ds151202.mlab.com:51202/showtime2");
 
 const searchSchema = mongoose.Schema({
   //id: {type: String, required: true},

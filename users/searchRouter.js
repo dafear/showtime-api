@@ -35,20 +35,16 @@ const {Search} = require('../users/models.js');
 
    router.get('/searches', (req, res) => {
     Search
-     .find()
-
-      .limit(100)
-
-     .exec()
-     .then(searches => {
-      
-        res.status(200).json(searches)
-       
+    .find()
+    .limit(100)
+    .exec()
+    .then(searches => {    
+      res.status(200).json(searches)    
     })
-      .catch(
-        err => {
-          console.error(err);
-          res.status(500).json({message: 'Internal server error'});
+    .catch(
+    err => {
+      console.error(err);
+      res.status(500).json({message: 'Internal server error'});
       });
   });
 
@@ -58,7 +54,7 @@ const {Search} = require('../users/models.js');
 router.post('/searches', (req, res) => {
 
   const requiredFields = ['url', 'name', 'address', 'city'];
-  for (let i=0; i<requiredFields.length; i++) {
+  for (let i = 0; i < requiredFields.length; i++) {
     const field = requiredFields[i];
     if (!(field in req.body)) {
       const message = `Missing \`${field}\` in request body`
@@ -77,7 +73,7 @@ router.post('/searches', (req, res) => {
       searches => res.status(201).json(searches.apiRepr()))
     .catch(err => {
       console.error(err);
-      res.status(500).json({message: 'Internal server error'});
+      res.status(500).json({ message: 'Internal server error' });
     });
 });
 
@@ -102,11 +98,9 @@ const updateableFields = ['id', 'url', 'name', 'address', 'city'];
            `(${req.body.id}) must match`); 
            console.error(message);
             res.status(400).json({message: message});
-     
-
           }
 
-                   updateableFields.forEach(field => {
+             updateableFields.forEach(field => {
                      if (field in req.body) {
                    toUpdate[field] = req.body[field];
    

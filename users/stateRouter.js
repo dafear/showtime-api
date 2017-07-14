@@ -32,12 +32,12 @@ var musicVenuesUrl = "https://api.foursquare.com/v2/venues/search?client_id=RJOU
 
   router.post('/savedSearches', jsonParser, (req, res) => {
   console.log('anything');
-  const requiredFields = ['url','name','address','city'];
+  const requiredFields = ['url', 'name', 'address', 'city'];
   const venues = req.body.places;
  
     console.log(venues);
 
-      venues.forEach(function (venue)  { 
+      venues.forEach(function (venue) { 
 
       const item = new Search({
       url: venue.url,

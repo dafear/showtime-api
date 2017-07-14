@@ -2,14 +2,14 @@
   "name": "showtime-api",
   "version": "1.0.0",
   "description": "\"search api\",",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "\"mocha\""
+    "test": "mocha",
+    "start": "nodemon"
   },
   "author": "Dhafir Fuller",
   "license": "ISC",
   "dependencies": {
-    "bcrypt-as-promised": "^1.1.0",
     "bcrypt-nodejs": "0.0.3",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.17.2",

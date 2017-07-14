@@ -1,124 +1,104 @@
-const {BasicStrategy} = require('passport-http');
 const express = require('express');
 const jsonParser = require('body-parser').json();
-const passport = require('passport');
-
-const {User} = require('./usersModels.js');
-
+const { User } = require('./usersModels.js');
+const jwt = require('jsonwebtoken');
+const config = require('../config');
+console.log(config.jwtSecret);
 const router = express.Router();
 
 router.use(jsonParser);
 
 
-// NB: at time of writing, passport uses callbacks, not promises
-const basicStrategy = new BasicStrategy((email, password, callback) => {
-  let user;
-  User
-    .findOne({email: email})
-    .exec()
-    .then(_user => {
-      user = _user;
-      if (!user) {
-        return callback(null, false);
-      }
-      return user.validatePassword(password);
-    })
-    .then(isValid => {
-      if (!isValid) {
-        return callback(null, false);
-      }
-      else {
-        return callback(null, user);
-      }
-    })
-    .catch(err => callback(err));
-});
 
-passport.use(basicStrategy);
-router.use(passport.initialize());
+
+
 
 router.post('/', (req, res) => {
-  if (!req.body) {
-    return res.status(400).json({message: 'No request body'});
-  }
-  console.log(req.body);
-  if (!('email' in req.body)) {
-    return res.status(422).json({message: 'Missing field: email'});
-  }
-
-  let {email, password} = req.body;
-
-  if (typeof email !== 'string') {
-    return res.status(422).json({message: 'Incorrect field type: email'});
-  }
-
-  email = email.trim();
-
-  if (email === '') {
-    return res.status(422).json({message: 'Incorrect field length: email'});
-  }
-
-  if (!(password)) {
-    return res.status(422).json({message: 'Missing field: password'});
-  }
-
-  if (typeof password !== 'string') {
-    return res.status(422).json({message: 'Incorrect field type: password'});
-  }
-
-  password = password.trim();
-
-  if (password === '') {
-    return res.status(422).json({message: 'Incorrect field length: password'});
-  }
-
-  // check for existing user
-  return User
-    .find({email})
-    .count()
-    .exec()
-    .then(count => {
-      if (count > 0) {
-        return res.status(422).json({message: 'email already taken'});
-      }
-      // if no existing user, hash password
-      return User.hashPassword(password)
-    })
-    .then(hash => {
-      return User
-        .create({
-          email: email,
-          password: hash
-          
-        })
-    })
-    .then(user => {
-      return res.status(201).json(user.apiRepr());
-    })
-    .catch(err => {
-      res.status(500).json({message: 'Internal server error'})
-    });
+  User.findOne({email: req.body.email}).select('email password').exec((err, user) => {
+    if (err) {
+      return res.status(404).json({message: 'User not found'})
+    };
+    if (!user) {
+      return res.status(500).json({success: false, message: 'User does not exist'});
+    }
+    if (!user.comparePassword(req.body.password)) {
+      res.json({success: false, message: 'Wrong password'});
+    } else {
+      let myToken = jwt.sign({
+        email: user.email,
+        id: user._id
+      }, config.jwtSecret, {expiresIn: "24h"});
+      res.json({
+        success: true,
+        message: 'Your token! ' + myToken,
+        token: myToken
+      });
+    }
+  });
 });
 
-// never expose all your users like below in a prod application
-// we're just doing this so we have a quick way to see
-// if we're creating users. keep in mind, you can also
-// verify this in the Mongo shell.
-  // router.get('/', (req, res) => {
-  //   return User
-  //    .find()
-  //   .exec()
-  //     .then(users => res.json(users.map(user => user.apiRepr())))
-  //     .catch(err => console.log(err) && res.status(500).json({message: 'Internal server error'}));
-  // });
+//register route
+router.post('/register', (req, res) => {
+  let user = new User();
+  user.email = req.body.email;
+  user.password = req.body.password;
+  console.log(req.body);
+  user.save((err) => {
+    if (err) {
+      console.log("the error");
+      console.log(err);
+      return res.status(500).json({message: "User already exists here!"})
+    }
+    let myToken = jwt.sign({
+      email: user.email,
+      id: user._id
+    }, config.jwtSecret, {expiresIn: "24h"});
+    res.json({
+      success: true,
+      message: "User successfully registered!" + myToken,
+      token: myToken
+    });
+  })
+
+});
+
+
+// router.delete('/', (req, res) => {
+      
+
+
+// router.delete('/sessions', (req, res) => {
+//   User.findById(req.decoded.id, (err, user) => {
+
+    
+//     if (user) {
+//       user.remove();
+      
+//     } else {
+//       res.status(404).json({message: "Unable to delete user!"});
+//     }
+
+//   });
+// });
 
 
 
 
- router.get('/more',
-   passport.authenticate('basic', {session: false}),
-   (req, res) => res.json({user: req.user.apiRepr()})
- );
+
+
+
+
+
+
+
+
+
+
+
 
 
 module.exports = router;
+
+
+
+
