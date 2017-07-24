@@ -1,4 +1,4 @@
-exports.DATABASE_URL = 'mongodb://dafear:sidney123@ds151202.mlab.com:51202/showtime2';
+exports.DATABASE_URL = 'mongodb://dafear456:sidney1234@ds127872.mlab.com:27872/showtime3';
 
                        
     

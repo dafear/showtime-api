@@ -3,8 +3,8 @@ const chaiHttp = require('chai-http');
 const mongoose = require('mongoose');
 const should = chai.should();
 
-
-const {Search} = require('../users/models.js');
+const {searchRecord} = require('../users/searchRecord.js');
+// const {Search} = require('../users/models.js');
 const {app, runServer, closeServer} = require('../server.js');
 const {DATABASE_URL} = require('../config');
 
@@ -12,7 +12,7 @@ const {DATABASE_URL} = require('../config');
 chai.use(chaiHttp);
 
 
-describe('Search', function() {
+describe('searchRecord', function() {
 
   before(function() {
     return runServer();
@@ -23,7 +23,7 @@ describe('Search', function() {
   });
 
   
-  it('should list Search items on GET', function() {
+  it('should list searchRecord items on GET', function() {
    
     return chai.request(app)
       .get('/searches')
@@ -47,7 +47,7 @@ describe('Search', function() {
      
 
   
-  it('should add Search on POST', function() {
+  it('should add searchRecord on POST', function() {
     const newSearch = { url: 'www.anything.com', name: 'coffee', address: 'nys', city: 'anyplace', id: '2348ad98934ty78'};
     return chai.request(app)
       .post('/searches')
@@ -66,7 +66,7 @@ describe('Search', function() {
 
   
   
-  it('should update Search items on PUT', function() {
+  it('should update searchRecord items on PUT', function() {
     
     const updateSearchData = {
       name: 'foo',

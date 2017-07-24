@@ -23,18 +23,21 @@ mongoose.Promise = global.Promise;
  
  }));
   
+
  router.use(bodyParser.json());
  router.use(methodOverride());
 
 
-const {Search} = require('../users/models.js');
+// const {Search} = require('../users/models.js');
+  const {searchRecord} = require('../users/searchRecord.js');
+
 
 
  
 
 
    router.get('/searches', (req, res) => {
-    Search
+    searchRecord
     .find()
     .limit(100)
     .exec()
@@ -63,7 +66,8 @@ router.post('/searches', (req, res) => {
     }
   }
 
-  Search
+     Search 
+     // searchRecord
     .create({
       url: req.body.url,
       name: req.body.name,
@@ -110,7 +114,8 @@ const updateableFields = ['id', 'url', 'name', 'address', 'city'];
  
       
 
-         Search
+          Search
+            // searchRecord
             .findByIdAndUpdate(mongoose.Types.ObjectId(req.params.id), {$set: toUpdate})
             .exec()
             .then(searches => res.status(200).send(req.body))
@@ -127,7 +132,8 @@ const updateableFields = ['id', 'url', 'name', 'address', 'city'];
 
 
           router.delete('/searches/:id', (req, res) => {
-          Search
+           Search 
+          // searchRecord
          .findByIdAndRemove(req.params.id)
          .exec()
          .then(searches => res.status(204).end())

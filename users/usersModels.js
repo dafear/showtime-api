@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const db = require('./db');
- mongoose.createConnection("mongodb://dafear:sidney123@ds151202.mlab.com:51202/showtime2");
+ mongoose.createConnection("mongodb://dafear456:sidney1234@ds127872.mlab.com:27872/showtime3");
 
 const bcrypt = require('bcrypt-nodejs');
 

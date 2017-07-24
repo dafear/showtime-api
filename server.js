@@ -8,7 +8,7 @@ const path = require('path');
 const mongoose = require('mongoose');
 const http = require('http');
 const flash = require('connect-flash');
-const cookieParser = require('cookie-parser');
+// const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const jwt = require('jsonwebtoken');
 const config = require('./config');
@@ -18,7 +18,7 @@ const config = require('./config');
 
 
 app.use(bodyParser.json());
-
+// app.use(cookieParser());
 mongoose.Promise = global.Promise;
 
 
