@@ -39,9 +39,11 @@ var musicVenuesUrl = "https://api.foursquare.com/v2/venues/search?client_id=RJOU
   const requiredFields = ['url', 'name', 'address', 'city'];
   const venues = req.body.places;
   const term = req.body.term;
+  const email = req.body.userEmail;
   var search = new searchRecord({
     term: term,
     searchedAt: new Date(),
+    userEmail: email,
     results: venues
   });
  

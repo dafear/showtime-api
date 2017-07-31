@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-// const cors = require('cors');
 const app = express();
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
@@ -8,7 +7,6 @@ const path = require('path');
 const mongoose = require('mongoose');
 const http = require('http');
 const flash = require('connect-flash');
-// const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const jwt = require('jsonwebtoken');
 const config = require('./config');

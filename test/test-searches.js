@@ -2,9 +2,7 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const mongoose = require('mongoose');
 const should = chai.should();
-
 const {searchRecord} = require('../users/searchRecord.js');
-// const {Search} = require('../users/models.js');
 const {app, runServer, closeServer} = require('../server.js');
 const {DATABASE_URL} = require('../config');
 
@@ -31,9 +29,7 @@ describe('searchRecord', function() {
         res.should.have.status(200);
         res.should.be.json;
         res.body.should.be.a('array');
-        
-        res.body.length.should.be.at.least(1);
-        
+
         const expectedKeys = ['url', 'name', 'address', 'city'];
         res.body.forEach(function(item) {
           item.should.be.a('object');
@@ -44,27 +40,6 @@ describe('searchRecord', function() {
       })
     });
       
-     
-
-  
-  it('should add searchRecord on POST', function() {
-    const newSearch = { url: 'www.anything.com', name: 'coffee', address: 'nys', city: 'anyplace', id: '2348ad98934ty78'};
-    return chai.request(app)
-      .post('/searches')
-      .send(newSearch)
-      .then(function(res) {
-        res.should.have.status(201);
-        res.should.be.json;
-        res.body.should.be.a('object');
-        res.body.should.include.keys('url', 'name', 'address', 'city', 'id');
-        res.body.id.should.not.be.null;
-      
-      }).catch(function(error) {
-        console.log(error)
-      })
-  });
-
-  
   
   it('should update searchRecord items on PUT', function() {
     

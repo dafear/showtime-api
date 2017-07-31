@@ -29,7 +29,7 @@ mongoose.Promise = global.Promise;
 
 
 // const {Search} = require('../users/models.js');
-  const {searchRecord} = require('../users/searchRecord.js');
+  const { searchRecord } = require('../users/searchRecord.js');
 
 
 
@@ -37,8 +37,9 @@ mongoose.Promise = global.Promise;
 
 
    router.get('/searches', (req, res) => {
+    let email = req.query.email; 
     searchRecord
-    .find()
+    .find({ userEmail: email })
     .limit(100)
     .exec()
     .then(searches => {    
@@ -66,8 +67,8 @@ router.post('/searches', (req, res) => {
     }
   }
 
-     Search 
-     // searchRecord
+     // Search 
+      searchRecord
     .create({
       url: req.body.url,
       name: req.body.name,
@@ -114,8 +115,8 @@ const updateableFields = ['id', 'url', 'name', 'address', 'city'];
  
       
 
-          Search
-            // searchRecord
+          // Search
+             searchRecord
             .findByIdAndUpdate(mongoose.Types.ObjectId(req.params.id), {$set: toUpdate})
             .exec()
             .then(searches => res.status(200).send(req.body))
@@ -132,8 +133,8 @@ const updateableFields = ['id', 'url', 'name', 'address', 'city'];
 
 
           router.delete('/searches/:id', (req, res) => {
-           Search 
-          // searchRecord
+           // Search 
+          searchRecord
          .findByIdAndRemove(req.params.id)
          .exec()
          .then(searches => res.status(204).end())
