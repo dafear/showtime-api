@@ -12,4 +12,4 @@
 ##Technology used includes JavaScript, jQuery, Node.js, CSS, HTML, Mlab, Mongoose, Mocha, Chai, Foursquare API, Heroku and Travis CI
 
 
-## Access the server at https://showtime-api-kakynqsype.now.sh/
+## Access the server at https://showtime-api.herokuapp.com/
