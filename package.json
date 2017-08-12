@@ -24,6 +24,7 @@
     "jade": "^1.11.0",
     "jsonwebtoken": "^7.4.1",
     "method-override": "^2.3.9",
+    "mongodb": "^2.2.31",
     "mongoose": "^4.10.7",
     "morgan": "^1.8.2",
     "nodemon": "^1.11.0",
